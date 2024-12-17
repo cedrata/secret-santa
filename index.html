@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Santa</title>
+</head>
+<body>
+    <h1>Secret Santa</h1>
+
+    <h2>Add Participants</h2>
+    <input type="text" id="participantName" placeholder="Enter name">
+    <button onclick="addParticipant()">Add</button>
+
+    <h3>Participants</h3>
+    <ul id="participantsList">
+        <!-- Participants will be added here -->
+    </ul>
+
+    <button onclick="makePairings()">Make Pairings</button>
+
+    <h3>Pairings</h3>
+    <ul id="pairingsList">
+        <!-- Pairings will be displayed here -->
+    </ul>
+
+    <script>
+        const participants = [];
+
+        function addParticipant() {
+            const nameInput = document.getElementById('participantName');
+            const name = nameInput.value.trim();
+
+            if (name && !participants.includes(name)) {
+                participants.push(name);
+                nameInput.value = '';
+                updateParticipantsList();
+            } else {
+                alert('Please enter a unique name.');
+            }
+        }
+
+        function updateParticipantsList() {
+            const participantsList = document.getElementById('participantsList');
+            participantsList.innerHTML = '';
+
+            participants.forEach(name => {
+                const listItem = document.createElement('li');
+                listItem.textContent = name;
+                participantsList.appendChild(listItem);
+            });
+        }
+
+        function makePairings() {
+            if (participants.length < 2) {
+                alert('Add at least two participants to make pairings.');
+                return;
+            }
+
+            const shuffled = [...participants].sort(() => Math.random() - 0.5);
+            const pairings = [];
+
+            for (let i = 0; i < shuffled.length; i++) {
+                const giver = shuffled[i];
+                const receiver = shuffled[(i + 1) % shuffled.length];
+                pairings.push(`${giver} → ${receiver}`);
+            }
+
+            displayPairings(pairings);
+        }
+
+        function displayPairings(pairings) {
+            const pairingsList = document.getElementById('pairingsList');
+            pairingsList.innerHTML = '';
+
+            pairings.forEach(pair => {
+                const listItem = document.createElement('li');
+                listItem.textContent = pair;
+                pairingsList.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
